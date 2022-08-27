@@ -1,1 +1,74 @@
-### This arti
+# How to download Raspberry PI Desktop for VMWare Fusion
+
+Essentially, I downloaded this link:
+https://www.raspberrypi.com/software/raspberry-pi-desktop/
+
+Which installs the Raspberry PI Desktop Image: 2022-07-01-raspios-bullseye-i386.iso
+
+This is the disk image that *is meant to run on a Mac or PC*, if you notice the architecture is x86 32-bit (i386).
+
+After you install the iso, I selected Debian 10.x 64-bit. 
+
+Next, select Legacy BIOS and around 60 GBs of disk space. This is quite a bit, but ensure we won't run out of disk space in the middle of all our stuff, which is super annoying. You'll probably wan't more than 4GBs of RAM as well (or more if you can spare it).
+
+Afterwards select graphic install, it's easier. 
+
+Make your account and allow for the updates to happen. Which took me a loong time.
+
+Sometime after this, select: Guided use entire disk and set up LVM. 
+
+Make all the files in one partition.
+
+It will say something like "Write the changes to disk?" and you want to respond with "Yes" for this.
+
+Even more installing will happen, just wait it out. Maybe read a book or make some tea. Don't look at the clock. 
+
+Say yes to installing the GRUB boot loaded 
+
+Say yes to /dev/sda being the primary partition.
+
+Wait some more. The air conditioner just turned on in my apartment. Think about how long after you move out that same sound will be heard by other people and families. I wonder if it will be too loud for them too. 
+
+It just turned off and now I hear crickets.
+
+The installer will periodically ask you if something is ok to do and if you want to continue. I recommend to barely even read what it asks and just click *continue*.
+
+Experience a sense of deja-vu when the installer asks you, yet again, to choose your default language. Click something like "English" but ,this time, do it suspicouly. 
+
+Update the software again, this is weird. It tells me it's synchronising the clock (don't look at the clock).
+
+This failed successfully, and now I'm greeted by the Raspberry Pi Desktop. Next up is installing spchcat.
+
+## Installing *spchcat*
+
+*spchcat* is a non-networked speech transcriber that runs an AI model to generate speech-to-text. Run the following commands (please)
+
+sudo dpkg --add-architecture i386
+sudo dpkg --add-architecture amd64
+sudo apt-get install update
+
+Then install the .deb package for x86 (not Raspberry PI) from the Gitub repo here: https://github.com/petewarden/spchcat/
+
+Wait a little bit more. This reminds me of a short story, I'll upload it to the repo.
+
+Wait a bit and run
+
+sudo dpkg -i /path/to/deb/package
+
+If it complains about the architecture, you probably installed the wrong one.
+
+Running spchcat should give the error:
+*No such file or directory* and running ldd should give something like *not a dynamic executable*
+
+Notice that you probably don't have a /lib/x86_64-linux-gnu directory. This is important and also not good.
+
+So try
+
+sudo apt-get install gcc-multilib 
+sudo apt-get install libpulse-dev:amd64
+
+And then try:
+spchcat
+
+And it should work! Feel free to shout YES and wake up your neighbors.
+
